@@ -4,7 +4,12 @@
 
 ## Quick Start
 
+_For Client App:_
+
 ```sh
+# cd into client/ dir
+cd client/
+
 # Install dependencies
 npm install
 
@@ -12,6 +17,19 @@ npm install
 npm run start
 
 # in browser, visit http://localhost:3000
+# to STOP, Ctrl+C in Terminal
+```
+
+_For Server App:_
+
+```sh
+# Install dependencies
+npm install
+
+# Start the app
+npm run dev
+
+# in browser, visit http://localhost:4000
 # to STOP, Ctrl+C in Terminal
 ```
 
@@ -24,8 +42,7 @@ npm run start
 - [Create React App](https://facebook.github.io/create-react-app/)
 - [Cloudinary](https://cloudinary.com/)
 - [Codecov](https://about.codecov.io/)
-- [Docker](https://www.docker.com/)
-- [Github Actions](https://docs.github.com/en/actions/learn-github-actions)
+- [ES6](http://es6-features.org/#Constants)
 - [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)
 - [GraphQL](https://graphql.org/)
 - [Heroku](https://www.heroku.com/)

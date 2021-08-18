@@ -19,6 +19,7 @@ const Login = ({ classes }) => {
       
       const { me } = await client.request(ME_QUERY);
       dispatch({ type: "LOGIN_USER", payload: me });
+      dispatch({ type: "IS_LOGGED_IN", payload: googleUser.isSignedIn() });
     } catch (err) {
       onFailure(err)
     }
@@ -40,10 +41,11 @@ const Login = ({ classes }) => {
         Ahoy!
       </Typography>
       <GoogleLogin 
-      clientId={process.env.OAUTH_CLIENT_ID}  
+      clientId="128001199119-nj5v7g4ct7stk2hotvo4p9ovmt0buk95.apps.googleusercontent.com" 
       onSuccess={onSuccess} 
       onFailure={onFailure} 
       isSignedIn={true}
+      buttonText="Login"
       theme="dark"
     />
     </div>

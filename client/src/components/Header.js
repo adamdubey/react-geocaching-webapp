@@ -66,7 +66,7 @@ const styles = theme => ({
   },
   icon: {
     marginRight: theme.spacing.unit,
-    color: "green",
+    color: "lime",
     fontSize: 45
   },
   mobile: {

@@ -5,9 +5,12 @@ import differenceInMinutes from 'date-fns/difference_in_minutes';
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
+import { Subscription } from "react-apollo";
 import { useClient } from "../client";
 import { GET_PINS_QUERY } from "../graphql/queries";
 import { DELETE_PIN_MUTATION } from "../graphql/mutations";
+import { PIN_ADDED_SUBSCRIPTION, PIN_UPDATED_SUBSCRIPTION, PIN_DELETED_SUBSCRIPTION } from "../graphql/subscriptions";
 import PinIcon from "./PinIcon";
 import Blog from "./Blog";
 import Context from "../context";
@@ -20,6 +23,7 @@ const INITIAL_VIEWPORT = {
 
 const Map = ({ classes }) => {
   const client = useClient();
+  const mobileSize = useMediaQuery('(max-width: 650px)');
   const { state, dispatch } = useContext(Context);
   useEffect(() => {
     getPins();
@@ -29,7 +33,14 @@ const Map = ({ classes }) => {
   useEffect(() => {
     getUserPosition();
   }, []);
-  const [popup, setPopup] = useState(null)
+  const [popup, setPopup] = useState(null);
+  // rm popup if pin is deleted by author
+  useEffect(() => {
+    const pinExists = popup && state.pins.findIndex(pin => pin._id === popup._id) > -1
+    if (!pinExists) {
+      setPopup(null);
+    }
+  }, [state.pins.length]);
 
 
   const getUserPosition = () => {
@@ -74,18 +85,18 @@ const Map = ({ classes }) => {
 
   const handleDeletePin = async pin => {
     const variables = { pinId: pin._id }
-    const { deletePin } = await client.request(DELETE_PIN_MUTATION, variables)
-    dispatch({ type: "DELETE_PIN", payload: deletePin })
+    await client.request(DELETE_PIN_MUTATION, variables)
     setPopup(null)
   };
 
   return (
-    <div className={classes.root}>
+    <div className={mobileSize ? classes.rootMobile : classes.root}>
       <ReactMapGL
         width="100vw"
         height="calc(100vh - 64px)"
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxApiAccessToken="pk.eyJ1IjoiYWRuaXgiLCJhIjoiY2tzamRybm44MmN0aTJwcXRlYmtzMnV2biJ9.KgJJMgRKXr-AYoX6Hm3iDA"
+        scrollZoom={!mobileSize}
         onViewportChange={viewport => setViewPort(viewport)}
         onClick={handleMapClick}
         {...viewport}
@@ -96,6 +107,8 @@ const Map = ({ classes }) => {
          />
 
       </div>
+
+      {/* Pin for user's current position */}
       {userPosition && (
         <Marker
           latitude={userPosition.latitude}
@@ -106,6 +119,8 @@ const Map = ({ classes }) => {
           <PinIcon size={40} color="orange" />
         </Marker>
       )}
+
+      {/* Draft pin */}
       {state.draft && (
       <Marker
         latitude={state.draft.latitude}
@@ -117,6 +132,7 @@ const Map = ({ classes }) => {
       </Marker>
       )}
 
+      {/* Created Pins */}
       {state.pins.map(pin => (
         <Marker
           key={pin._id}
@@ -129,6 +145,7 @@ const Map = ({ classes }) => {
         </Marker>
       ))}
 
+      {/* Popup for created pins */}
       {popup && (
         <Popup
           anchor="top"
@@ -155,7 +172,31 @@ const Map = ({ classes }) => {
         </Popup>
       )}
       </ReactMapGL>
-      
+
+      {/* Subscriptions for CRUD pins */}
+      <Subscription 
+        subscription={PIN_ADDED_SUBSCRIPTION}
+        onSubscriptionData={({ subscriptionData }) => {
+          const { pinAdded } = subscriptionData.data
+          dispatch({ type: "CREATE_PIN", payload: pinAdded })
+        }}
+      />
+      <Subscription 
+        subscription={PIN_UPDATED_SUBSCRIPTION}
+        onSubscriptionData={({ subscriptionData }) => {
+          const { pinUpdated } = subscriptionData.data
+          dispatch({ type: "CREATE_COMMENT", payload: pinUpdated })
+        }}
+      />
+      <Subscription 
+        subscription={PIN_DELETED_SUBSCRIPTION}
+        onSubscriptionData={({ subscriptionData }) => {
+          const { pinDeleted } = subscriptionData.data
+          dispatch({ type: "DELETE_PIN", payload: pinDeleted })
+        }}
+      />
+
+      {/* Blog to add pin content */}
       <Blog />
     </div>
   );

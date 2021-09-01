@@ -16,7 +16,8 @@ const Login = ({ classes }) => {
       const idToken = googleUser.getAuthResponse().id_token;
       
       const client = new GraphQLClient(BASE_URL, {
-        headers: { authorization: idToken }
+        headers: { authorization: idToken },
+        mode: 'cors'
       });
       
       const { me } = await client.request(ME_QUERY);
@@ -44,7 +45,7 @@ const Login = ({ classes }) => {
         Ahoy!
       </Typography>
       <GoogleLogin 
-      clientId="128001199119-ng20e3dclmio87dcfjdi7q054kac5d9v.apps.googleusercontent.com" 
+      clientId="128001199119-cs7vs102uh5ebbuhphffddab0c4l5msv.apps.googleusercontent.com" 
       onSuccess={onSuccess} 
       onFailure={onFailure} 
       isSignedIn={true}

@@ -13,12 +13,14 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
 
 // ApolloServer Config
 const server = new ApolloServer({
+    cors: {
+        origin: '*',
+        credentials: true
+    },
     typeDefs,
     resolvers,
-    // DO NOT ENABLE!!!
-    // to enable playground in PROD:
-    // introspection: true,
-    // playgroud: true,
+    introspection: true,
+    playgroud: true,
 
     context: async ({ req }) => {
         let authToken = null;

@@ -15,6 +15,11 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    // DO NOT ENABLE!!!
+    // to enable playground in PROD:
+    // introspection: true,
+    // playgroud: true,
+
     context: async ({ req }) => {
         let authToken = null;
         let currentUser = null
@@ -33,7 +38,7 @@ const server = new ApolloServer({
 });
 
 // Server Init
-server.listen().then(({ url }) => {
+server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
     console.log(`Server listening on ${url}`);
 });
 

@@ -17,6 +17,7 @@ const Header = ({ classes }) => {
     <div className={classes.root}>
       <AppBar position="static">
         <ToolBar>
+          {/* Title */}
           <div className={classes.grow}>
             <MapIcon className={classes.icon} />
             <Typography
@@ -29,6 +30,7 @@ const Header = ({ classes }) => {
                 Geocache Spotter App
               </Typography>
           </div>
+          {/* Current user information */}
           {currentUser && (
             <div className={classes.grow}>
               <img
@@ -46,7 +48,7 @@ const Header = ({ classes }) => {
               </Typography>
             </div>
           )}
-
+          {/* Signout btn */}
           <Signout />
         </ToolBar>
       </AppBar>

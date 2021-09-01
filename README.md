@@ -41,7 +41,6 @@ npm run dev
 - [Axios](https://axios-http.com/docs/intro)
 - [Create React App](https://facebook.github.io/create-react-app/)
 - [Cloudinary](https://cloudinary.com/)
-- [Codecov](https://about.codecov.io/)
 - [ES6](http://es6-features.org/#Constants)
 - [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)
 - [GraphQL](https://graphql.org/)
@@ -53,3 +52,4 @@ npm run dev
 - [Mongoose](https://mongoosejs.com/docs/)
 - [Node.js](https://nodejs.org/en/)
 - [Nodemon](https://nodemon.io/)
+- [Vercel](https://vercel.com/)

@@ -10,6 +10,8 @@ require('dotenv').config()
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
     .then(() => console.log('DB Connection Established!'))
     .catch(err => console.error(err));
+mongoose.set("useFindAndModify", false);
+
 
 // ApolloServer Config
 const server = new ApolloServer({
@@ -24,16 +26,16 @@ const server = new ApolloServer({
 
     context: async ({ req }) => {
         let authToken = null;
-        let currentUser = null
+        let currentUser = null;
         try {
-            authToken = req.headers.authorization
+            authToken = req.headers.authorization;
             if (authToken) {
                 // find or create user
-                currentUser = findOrCreateUser(authToken)
+                currentUser = findOrCreateUser(authToken);
 
             }
         } catch (err) {
-            console.log(`Unable to authenticate user with token ${authToken}`);
+            console.log(`Unable to authenticate user with token ${authToken}`, err);
         }
         return { currentUser }
     }
